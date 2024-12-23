@@ -1,0 +1,13 @@
+- endpoints users
+- endpoints contas:
+  - cadastro de contas:
+    - Nome do favorecido
+    - data de vencimento
+    - valor
+    - tipo de conta(agua, luz, etc)
+  - contas a receber:
+    - ???
+- endpoints vendas:
+    - vendas diarias
+    - tipo de venda(pix, cartao, dinheiro, etc)
+    - horario ou turno da venda(manha, tarde ou noite)
