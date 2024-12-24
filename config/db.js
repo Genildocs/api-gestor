@@ -2,12 +2,11 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URL, {
-      useNewUrlParser: true,
-    });
+    const conn = await mongoose.connect(process.env.MONGO_URL);
 
     console.log(`MongoDB Connected: ${conn.connection.host}`);
 
+    mongoose.set('debug', true);
     //Eventos para monitorar o estado da conexão
     mongoose.connection.on('connected', () => {
       console.log(`Mongoose conectado ao banco de dados`);
