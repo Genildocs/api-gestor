@@ -1,4 +1,7 @@
 const User = require('../models/userModel');
+const jwt = require('jsonwebtoken');
+
+const secretKey = process.env.SECRET_KEY;
 
 // Controlador para obter todos os usuários
 exports.getAllUsers = async (req, res) => {
@@ -38,13 +41,21 @@ exports.createUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
+
     const user = await User.findOne({ email });
     if (!user || (await user.isValidPassword(password))) {
       return res.status(401).json({ message: 'Email ou senha incorretos' });
     }
+    // Gera o token JWT
+    const token = jwt.sign({ userId: user._id, email: user.email }, secretKey, {
+      expiresIn: '1h',
+    });
 
-    res.status(200).json({ message: 'Login realizado com sucesso' });
+    res
+      .status(200)
+      .json({ message: 'Login realizado com sucesso', token: token });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'Erro ao realizar login' });
   }
 };
