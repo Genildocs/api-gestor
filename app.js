@@ -3,6 +3,7 @@ const express = require('express');
 const connectDb = require('./config/db');
 const bodyParser = require('body-parser');
 const authRoutes = require('./routes/authRoutes');
+const contasRoutes = require('./routes/contasRoutes');
 const app = express();
 const cors = require('cors');
 
@@ -14,6 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 connectDb();
 
 app.use('/api/v1/users', authRoutes);
+app.use('/api/v1/contas', contasRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
