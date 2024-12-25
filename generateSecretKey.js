@@ -19,7 +19,7 @@ function ensureSecretKeyInEnv() {
 
   // Verifica se já existe uma SECRET_KEY no arquivo
   if (envContent.includes('SECRET_KEY=')) {
-    console.log('SECRET_KEY já existe no arquivo .env.');
+    console.log('SECRET_KEY já existe no arquivo .env');
     return;
   }
 
