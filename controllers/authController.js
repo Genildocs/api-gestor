@@ -15,9 +15,9 @@ exports.getAllUsers = async (req, res) => {
 
 exports.createUser = async (req, res) => {
   try {
-    const { user, email, password } = req.body;
+    const { username, email, password } = req.body;
     //valida se o users ja existe
-    const existingUser = await User.findOne({ user });
+    const existingUser = await User.findOne({ username });
     //valida se o email ja é registrado
     const existingEmail = await User.findOne({ email });
     if (existingUser) {
@@ -28,7 +28,7 @@ exports.createUser = async (req, res) => {
       return res.status(400).json({ message: 'Email já registrado' });
     }
 
-    const newUser = new User({ user, email, password });
+    const newUser = new User({ username, email, password });
     await newUser.save();
     res.status(201).json({ message: 'Usuário criado com sucesso' });
   } catch (error) {
