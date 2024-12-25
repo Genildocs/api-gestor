@@ -1,5 +1,6 @@
 const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 const secretKey = process.env.SECRET_KEY;
 
@@ -41,9 +42,11 @@ exports.createUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-
     const user = await User.findOne({ email });
-    if (!user || (await user.isValidPassword(password))) {
+    //Validação de senha
+    const passwordMatch =
+      user === null ? false : await bcrypt.compare(password, user.password);
+    if (!(user && passwordMatch)) {
       return res.status(401).json({ message: 'Email ou senha incorretos' });
     }
     // Gera o token JWT

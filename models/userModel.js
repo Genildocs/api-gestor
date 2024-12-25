@@ -23,11 +23,6 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-//Metodo para validar a senha
-userSchema.methods.isValidPassword = async function (password) {
-  return bcrypt.compare(password, this.password);
-};
-
 const User = mongoose.model('User', userSchema, 'users');
 
 module.exports = User;
