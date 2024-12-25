@@ -2,7 +2,7 @@ const fs = require('fs');
 const crypto = require('crypto');
 
 //caminho para o arquivo env
-const envFile = './.env';
+const envFile = '.env';
 
 // Função para gerar a chave secreta
 function generateSecretKey() {
