@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema({
 
 // Middleware para hash da senha antes de salvar
 userSchema.pre('save', async function (next) {
+  //condição caso a senha nao seja alterada
   if (!this.isModified('password')) return next();
   this.password = await bcrypt.hash(this.password, 10);
   next();
