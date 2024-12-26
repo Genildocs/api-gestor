@@ -14,6 +14,12 @@ const userSchema = new mongoose.Schema({
   },
   password: { type: String, required: true, minlength: 8 },
   role: { type: String, enum: ['user', 'admin'], default: 'user' },
+  contas: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Conta',
+    }
+  ]
 });
 
 // Middleware para hash da senha antes de salvar

@@ -3,6 +3,6 @@ const contaController = require('../controllers/contaController');
 const { authenticate } = require('../middlewares/authMiddleware');
 const router = express.Router();
 
-router.post('/', authenticate, contaController.createConta);
+router.post('/',  contaController.createConta);
 
 module.exports = router;

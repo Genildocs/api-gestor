@@ -1,16 +1,19 @@
 const Conta = require('../models/contaModel');
+const User = require('../models/userModel');
 
 exports.createConta = async (req, res) => {
   try {
-    const { descricao, valor, status } = req.body;
-
+    const body = req.body;
+    const user = await User.findById(body.userId)
     const conta = new Conta({
-      descricao,
-      valor,
-      status,
-      usuario: req.user,
+      descricao: body.descricao,
+      valor: body.valor,
+      status: body.status,
+      user: user._id
     });
-    await conta.save();
+    const saveConta = await conta.save()
+    user.contas = user.contas.concat(saveConta)
+    await user.save();
     res.status(201).json({ message: 'Conta criada com sucesso', conta });
   } catch (error) {
     console.error(error);
