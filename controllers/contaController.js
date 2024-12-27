@@ -8,6 +8,7 @@ exports.createConta = async (req, res) => {
     const conta = new Conta({
       nome: body.nome,
       valor: body.valor,
+      vencimento: body.vencimento,
       tipo: body.tipo,
       user: user._id,
     });
@@ -23,11 +24,24 @@ exports.createConta = async (req, res) => {
 
 exports.getContas = async (req, res) => {
   try {
+    //filtro
     const queryObject = { ...req.query };
     const excludeFields = ['page', 'sort', 'limit', 'fields'];
     excludeFields.forEach((el) => delete queryObject[el]);
 
-    const query = Conta.find(queryObject);
+    //filtros avançados
+    let queryStr = JSON.stringify(queryObject);
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+
+    let query = Conta.find(JSON.parse(queryStr));
+
+    //fields limits
+    if (req.query.fields) {
+      const fields = req.query.fields.split(',').join(' ');
+      query = query.select(fields);
+    } else {
+      query = query.select('-__v');
+    }
 
     const contas = await query;
     res.status(200).json({ status: 'success', contas });
