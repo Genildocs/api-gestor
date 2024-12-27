@@ -2,23 +2,43 @@ const Conta = require('../models/contaModel');
 const User = require('../models/userModel');
 
 exports.createConta = async (req, res) => {
+  // try {
+  //   const body = req.body;
+  //   const user = await User.findById(body.userId);
+  //   const conta = new Conta({
+  //     nome: body.nome,
+  //     valor: body.valor,
+  //     vencimento: body.vencimento,
+  //     tipo: body.tipo,
+  //     user: user._id,
+  //   });
+  //   const saveConta = await conta.save();
+  //   user.contas = user.contas.concat(saveConta);
+  //   await user.save();
+  //   res.status(201).json({ message: 'Conta criada com sucesso', conta });
+  // } catch (error) {
+  //   console.error(error);
+  //   res.status(500).json({ message: 'Erro ao criar conta' });
+  // }
   try {
-    const body = req.body;
-    const user = await User.findById(body.userId);
-    const conta = new Conta({
-      nome: body.nome,
-      valor: body.valor,
-      vencimento: body.vencimento,
-      tipo: body.tipo,
-      user: user._id,
+    const { descricao, valor, tipo } = req.body;
+
+    // Cria a nova conta
+    const novaConta = await Conta.create({
+      descricao,
+      valor,
+      tipo,
+      userId: req.userId, // Associa ao usuário logado
     });
-    const saveConta = await conta.save();
-    user.contas = user.contas.concat(saveConta);
-    await user.save();
-    res.status(201).json({ message: 'Conta criada com sucesso', conta });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Erro ao criar conta' });
+
+    // Atualiza a lista de contas do usuário
+    await User.findByIdAndUpdate(req.userId, {
+      $push: { contas: novaConta._id },
+    });
+
+    res.status(201).json(novaConta);
+  } catch (err) {
+    res.status(500).json({ error: 'Erro ao criar conta.' });
   }
 };
 
