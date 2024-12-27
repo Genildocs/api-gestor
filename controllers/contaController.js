@@ -21,13 +21,14 @@ exports.createConta = async (req, res) => {
   //   res.status(500).json({ message: 'Erro ao criar conta' });
   // }
   try {
-    const { descricao, valor, tipo } = req.body;
+    const { nome, valor, tipo, vencimento } = req.body;
 
     // Cria a nova conta
     const novaConta = await Conta.create({
-      descricao,
+      nome,
       valor,
       tipo,
+      vencimento,
       userId: req.userId, // Associa ao usuário logado
     });
 
