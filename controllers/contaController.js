@@ -33,7 +33,7 @@ exports.createConta = async (req, res) => {
     });
 
     // Atualiza a lista de contas do usuário
-    await User.findByIdAndUpdate(req.userId, {
+    await User.findByIdAndUpdate('676dd108722342a024fc6c79', {
       $push: { contas: novaConta._id },
     });
 
