@@ -29,7 +29,7 @@ exports.createConta = async (req, res) => {
       valor,
       tipo,
       vencimento,
-      userId: req.userId, // Associa ao usuário logado
+      userId: '676dd108722342a024fc6c79', // Associa ao usuário logado
     });
 
     // Atualiza a lista de contas do usuário
