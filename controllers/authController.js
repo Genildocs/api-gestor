@@ -5,14 +5,6 @@ const bcrypt = require('bcrypt');
 const secretKey = process.env.SECRET_KEY;
 
 // Controlador para obter todos os usuários
-exports.getAllUsers = async (req, res) => {
-  try {
-    const users = await User.find();
-    res.json({ usersList: users });
-  } catch (error) {
-    res.status(500).json({ message: 'Erro ao buscar usuários.' });
-  }
-};
 
 exports.createUser = async (req, res) => {
   try {

@@ -2,9 +2,10 @@ const mongoose = require('mongoose');
 
 const contaSchema = new mongoose.Schema(
   {
-    descricao: { type: String, required: true },
+    nome: { type: String, required: true },
     valor: { type: Number, required: true },
     status: { type: String, enum: ['pendente', 'pago'], default: 'pendente' },
+    tipo: { type: String, enum: ['a pagar', 'a receber'], required: true },
   },
   { timestamps: true }
 );
