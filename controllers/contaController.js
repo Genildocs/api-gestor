@@ -1,6 +1,6 @@
 const Conta = require('../models/contaModel');
 const User = require('../models/userModel');
-
+const { protectedRoute } = require('../controllers/authController');
 exports.createConta = async (req, res) => {
   // try {
   //   const body = req.body;
@@ -21,6 +21,7 @@ exports.createConta = async (req, res) => {
   //   res.status(500).json({ message: 'Erro ao criar conta' });
   // }
   try {
+    console.log(req.body);
     const { nome, valor, tipo, vencimento } = req.body;
 
     // Cria a nova conta
@@ -29,7 +30,7 @@ exports.createConta = async (req, res) => {
       valor,
       tipo,
       vencimento,
-      userId: '676dd108722342a024fc6c79', // Associa ao usuário logado
+      user: req.user._id, // Associa ao usuário logado
     });
 
     // Atualiza a lista de contas do usuário

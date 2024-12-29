@@ -18,8 +18,8 @@ const userSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Conta',
-    }
-  ]
+    },
+  ],
 });
 
 // Middleware para hash da senha antes de salvar
@@ -29,6 +29,23 @@ userSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
+
+// Middleware para verificar se a senha esta correta
+userSchema.methods.comparePassword = async function (candidatePassword) {
+  return await bcrypt.compare(candidatePassword, this.password);
+};
+
+// Middleware para verificar se a senha foi alterada
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+    return JWTTimestamp < changedTimestamp;
+  }
+  return false;
+};
 
 const User = mongoose.model('User', userSchema, 'users');
 

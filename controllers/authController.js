@@ -1,3 +1,4 @@
+const { promisify } = require('util');
 const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -73,4 +74,17 @@ exports.protectedRoute = async (req, res, next) => {
   if (!token) {
     return next(res.status(401).json({ message: 'Acesso não autorizado.' }));
   }
+  //verificar se o token é valido
+  const decoded = await promisify(jwt.verify)(token, secretKey);
+
+  //verificar se o usuário existe
+  const currentUser = await User.findById(decoded.userId);
+  if (!currentUser) {
+    return next(res.status(401).json({ message: 'Usuário nao encontrado.' }));
+  }
+  //check if user changed password after the token was issued
+  if (currentUser.changedPasswordAfter(decoded.iat)) {
+    return next(res.status(401).json({ message: 'Token expirado.' }));
+  }
+  next();
 };
