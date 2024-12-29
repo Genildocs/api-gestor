@@ -1,12 +1,12 @@
 const express = require('express');
 const contaController = require('../controllers/contaController');
-const { authenticate } = require('../middlewares/authMiddleware');
+const authController = require('../controllers/authController');
 const router = express.Router();
 
 router
   .route('/')
-  .post(authenticate, contaController.createConta)
-  .get(contaController.getContas);
+  .post(authController.protectedRoute, contaController.createConta)
+  .get(authController.protectedRoute, contaController.getContas);
 
 router.get('/acumulado-mensal', contaController.getAcumuladoMensal);
 router.get('/mensais', contaController.getContasMensais);

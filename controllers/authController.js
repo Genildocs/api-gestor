@@ -59,3 +59,18 @@ exports.loginUser = async (req, res) => {
     res.status(500).json({ message: 'Erro ao realizar login' });
   }
 };
+
+exports.protectedRoute = async (req, res, next) => {
+  //verificar se o token existe
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer ')
+  ) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+
+  if (!token) {
+    return next(res.status(401).json({ message: 'Acesso não autorizado.' }));
+  }
+};
