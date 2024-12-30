@@ -2,9 +2,10 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const validator = require('validator');
 const crypto = require('crypto');
+const { type } = require('os');
 
 const userSchema = new mongoose.Schema({
-  uid: crypto.randomUUID(),
+  uid: { type: String },
   username: { type: String, required: true, unique: true },
   email: {
     type: String,
