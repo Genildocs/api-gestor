@@ -10,13 +10,8 @@ const secretKey = process.env.SECRET_KEY;
 exports.createUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
-    //valida se o users ja existe
-    const existingUser = await User.findOne({ username });
     //valida se o email ja é registrado
     const existingEmail = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: 'Usuário já existe' });
-    }
 
     if (existingEmail) {
       return res.status(400).json({ message: 'Email já registrado' });
