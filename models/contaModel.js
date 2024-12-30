@@ -6,7 +6,7 @@ const contaSchema = new mongoose.Schema(
     valor: { type: Number, required: true },
     status: { type: String, enum: ['pendente', 'pago'], default: 'pendente' },
     vencimento: { type: Date, required: true },
-    tipo: { type: String, enum: ['pagar', 'receber'], required: true },
+    tipo: { type: String, enum: ['a pagar', 'a receber'], required: true },
   },
   { timestamps: true }
 );
