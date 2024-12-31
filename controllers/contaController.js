@@ -1,27 +1,29 @@
 const Conta = require('../models/contaModel');
 const User = require('../models/userModel');
-const { protectedRoute } = require('../controllers/authController');
+
 exports.createConta = async (req, res) => {
   try {
-    console.log(req.body);
-    const { nome, valor, tipo, vencimento } = req.body;
+    const { nome, valor, vencimento, tipo } = req.body;
+    const user = await User.findById(req.body.userId);
 
     // Cria a nova conta
-    const novaConta = await Conta.create({
+    const conta = new Conta({
       nome,
       valor,
-      tipo,
       vencimento,
-      user: req.user._id, // Associa ao usuário logado
+      tipo,
+      user: user.id,
     });
 
+    const novaConta = await conta.save();
     // Atualiza a lista de contas do usuário
-    await User.findByIdAndUpdate(User, {
+    await User.findByIdAndUpdate(user, {
       $push: { contas: novaConta._id },
     });
 
     res.status(201).json(novaConta);
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: 'Erro ao criar conta.' });
   }
 };
@@ -29,6 +31,7 @@ exports.createConta = async (req, res) => {
 exports.getContas = async (req, res) => {
   try {
     //filtro
+    const user = req.user;
     const queryObject = { ...req.query };
     const excludeFields = ['page', 'sort', 'limit', 'fields'];
     excludeFields.forEach((el) => delete queryObject[el]);
@@ -37,8 +40,8 @@ exports.getContas = async (req, res) => {
     let queryStr = JSON.stringify(queryObject);
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
 
-    let query = Conta.find(JSON.parse(queryStr));
-
+    let query = Conta.find({ ...JSON.parse(queryStr), user: user.id });
+    console.log(query);
     //fields limits
     if (req.query.fields) {
       const fields = req.query.fields.split(',').join(' ');

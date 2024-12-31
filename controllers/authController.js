@@ -72,10 +72,12 @@ exports.protectedRoute = async (req, res, next) => {
     return next(res.status(401).json({ message: 'Acesso não autorizado.' }));
   }
   //verificar se o token é valido
+
   const decoded = await promisify(jwt.verify)(token, secretKey);
 
   //verificar se o usuário existe
   const currentUser = await User.findById(decoded.userId);
+
   if (!currentUser) {
     return next(res.status(401).json({ message: 'Usuário nao encontrado.' }));
   }
@@ -83,5 +85,6 @@ exports.protectedRoute = async (req, res, next) => {
   if (currentUser.changedPasswordAfter(decoded.iat)) {
     return next(res.status(401).json({ message: 'Token expirado.' }));
   }
+  req.user = currentUser;
   next();
 };
