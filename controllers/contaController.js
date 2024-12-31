@@ -4,7 +4,7 @@ const User = require('../models/userModel');
 exports.createConta = async (req, res) => {
   try {
     const { nome, valor, vencimento, tipo } = req.body;
-    const user = await User.findById(req.body.userId);
+    const user = await User.findById(req.user);
 
     // Cria a nova conta
     const conta = new Conta({
@@ -12,12 +12,12 @@ exports.createConta = async (req, res) => {
       valor,
       vencimento,
       tipo,
-      user: user.id,
+      user: user._id,
     });
 
     const novaConta = await conta.save();
     // Atualiza a lista de contas do usuário
-    await User.findByIdAndUpdate(user, {
+    await User.findByIdAndUpdate(user._id, {
       $push: { contas: novaConta._id },
     });
 
@@ -41,7 +41,7 @@ exports.getContas = async (req, res) => {
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
 
     let query = Conta.find({ ...JSON.parse(queryStr), user: user.id });
-    console.log(query);
+
     //fields limits
     if (req.query.fields) {
       const fields = req.query.fields.split(',').join(' ');
