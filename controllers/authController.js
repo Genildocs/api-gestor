@@ -2,6 +2,7 @@ const { promisify } = require('util');
 const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 
 const secretKey = process.env.SECRET_KEY;
 
@@ -9,6 +10,7 @@ const secretKey = process.env.SECRET_KEY;
 
 exports.createUser = async (req, res) => {
   try {
+    const uid = crypto.randomUUID();
     const { username, email, password } = req.body;
     //valida se o email ja é registrado
     const existingEmail = await User.findOne({ email });
@@ -17,7 +19,7 @@ exports.createUser = async (req, res) => {
       return res.status(400).json({ message: 'Email já registrado' });
     }
 
-    const newUser = new User({ username, email, password });
+    const newUser = new User({ username, email, password, uid });
     await newUser.save();
     res.status(201).json({ message: 'Usuário criado com sucesso' });
   } catch (error) {

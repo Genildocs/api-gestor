@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const validator = require('validator');
-const crypto = require('crypto');
-const { type } = require('os');
 
 const userSchema = new mongoose.Schema({
   uid: { type: String },
