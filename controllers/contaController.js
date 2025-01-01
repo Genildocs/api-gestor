@@ -18,7 +18,7 @@ exports.createConta = async (req, res) => {
     const novaConta = await conta.save();
     // Atualiza a lista de contas do usuário
     await User.findByIdAndUpdate(user._id, {
-      $pull: { contas: novaConta },
+      $push: { contas: novaConta._id },
     });
 
     res.status(201).json(novaConta);
