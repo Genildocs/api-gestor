@@ -13,6 +13,7 @@ router.get('/mensais', contaController.getContasMensais);
 
 router
   .route('/:id')
-  .delete(authController.protectedRoute, contaController.deleteConta);
+  .delete(authController.protectedRoute, contaController.deleteConta)
+  .put(authController.protectedRoute, contaController.updateConta);
 
 module.exports = router;

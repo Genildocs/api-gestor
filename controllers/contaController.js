@@ -132,8 +132,23 @@ exports.getContasMensais = async (req, res) => {
 exports.deleteConta = async (req, res) => {
   try {
     const conta = await Conta.findByIdAndDelete(req.params.id);
+    const user = await User.findById(req.user);
+    await User.findByIdAndUpdate(user._id, {
+      $push: { contas: conta._id },
+    });
     res.status(200).json(conta);
   } catch (error) {
     res.status(500).json({ message: 'Erro ao deletar conta' });
+  }
+};
+
+exports.updateConta = async (req, res) => {
+  try {
+    const conta = await Conta.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    res.status(200).json(conta);
+  } catch (error) {
+    res.status(500).json({ message: 'Erro ao atualizar conta' });
   }
 };
