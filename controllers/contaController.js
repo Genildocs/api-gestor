@@ -128,3 +128,12 @@ exports.getContasMensais = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 };
+
+exports.deleteConta = async (req, res) => {
+  try {
+    const conta = await Conta.findByIdAndDelete(req.params.id);
+    res.status(200).json(conta);
+  } catch (error) {
+    res.status(500).json({ message: 'Erro ao deletar conta' });
+  }
+};

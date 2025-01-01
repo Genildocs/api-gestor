@@ -11,6 +11,8 @@ router
 router.get('/acumulado-mensal', contaController.getAcumuladoMensal);
 router.get('/mensais', contaController.getContasMensais);
 
-router.route('/:id');
+router
+  .route('/:id')
+  .delete(authController.protectedRoute, contaController.deleteConta);
 
 module.exports = router;
