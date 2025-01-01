@@ -134,7 +134,7 @@ exports.deleteConta = async (req, res) => {
     const conta = await Conta.findByIdAndDelete(req.params.id);
     const user = await User.findById(req.user);
     await User.findByIdAndUpdate(user._id, {
-      $pull: { contas: conta },
+      $pull: { contas: conta._id },
     });
     res.status(200).json(conta);
   } catch (error) {
