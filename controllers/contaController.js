@@ -18,7 +18,7 @@ exports.createConta = async (req, res) => {
     const novaConta = await conta.save();
     // Atualiza a lista de contas do usuário
     await User.findByIdAndUpdate(user._id, {
-      $push: { contas: novaConta._id },
+      $pull: { contas: novaConta._id },
     });
 
     res.status(201).json(novaConta);
@@ -134,7 +134,7 @@ exports.deleteConta = async (req, res) => {
     const conta = await Conta.findByIdAndDelete(req.params.id);
     const user = await User.findById(req.user);
     await User.findByIdAndUpdate(user._id, {
-      $push: { contas: conta._id },
+      $pull: { contas: conta._id },
     });
     res.status(200).json(conta);
   } catch (error) {
