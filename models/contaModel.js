@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { DateTime } = require('luxon');
 
 const contaSchema = new mongoose.Schema({
   nome: { type: String, required: true },
@@ -13,7 +14,10 @@ const contaSchema = new mongoose.Schema({
   },
   tipoDePagamento: { type: String, enum: ['parcelado', 'unica'] },
   parcelas: { type: Number },
-  criadoEm: { type: Date, default: Date.now },
+  criadoEm: {
+    type: Date,
+    default: Date.now(),
+  },
   user: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 });
 

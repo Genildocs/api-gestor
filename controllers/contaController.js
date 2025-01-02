@@ -1,17 +1,17 @@
 const Conta = require('../models/contaModel');
 const User = require('../models/userModel');
-
+const { DateTime } = require('luxon');
 exports.createConta = async (req, res) => {
   try {
     const { nome, valor, vencimento, tipo } = req.body;
-    const user = await User.findById(req.user);
-
+    const user = req.user;
     // Cria a nova conta
     const conta = new Conta({
       nome,
       valor,
       vencimento,
       tipo,
+
       user: user._id,
     });
 
@@ -31,6 +31,7 @@ exports.createConta = async (req, res) => {
 exports.getContas = async (req, res) => {
   try {
     //filtro
+
     const user = req.user;
     const queryObject = { ...req.query };
     const excludeFields = ['page', 'sort', 'limit', 'fields'];
@@ -50,7 +51,17 @@ exports.getContas = async (req, res) => {
       query = query.select('-__v');
     }
 
-    const contas = await query;
+    // Ajusta o fuso horário para São Paulo
+    const contasComFusoHorario = await query;
+
+    const contas = contasComFusoHorario.map((conta) => ({
+      //transforma o documento em DOCUMENTO
+      ...conta.toObject(),
+      criadoEm: DateTime.fromJSDate(conta.criadoEm)
+        .setZone('America/Sao_Paulo')
+        .toISO(),
+    }));
+
     res.status(200).json({ status: 'success', contas });
   } catch (error) {
     console.log(error);
