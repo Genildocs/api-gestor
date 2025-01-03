@@ -161,12 +161,10 @@ exports.updateConta = async (req, res) => {
     const conta = await Conta.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-    const user = await User.findById(req.user);
-    await User.findByIdAndUpdate(user._id, {
-      $: { contas: conta._id },
-    });
+
     res.status(200).json({
       message: 'Conta atualizada com sucesso',
+      conta,
     });
   } catch (error) {
     res.status(500).json({ message: 'Erro ao atualizar conta' });
