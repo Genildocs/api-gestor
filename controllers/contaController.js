@@ -3,15 +3,16 @@ const User = require('../models/userModel');
 const { DateTime } = require('luxon');
 exports.createConta = async (req, res) => {
   try {
-    const { nome, valor, vencimento, tipo } = req.body;
+    const { id, nome, valor, vencimento, tipo, descricao } = req.body;
     const user = req.user;
     // Cria a nova conta
     const conta = new Conta({
+      id,
       nome,
       valor,
       vencimento,
       tipo,
-
+      descricao,
       user: user._id,
     });
 
@@ -21,7 +22,9 @@ exports.createConta = async (req, res) => {
       $push: { contas: novaConta._id },
     });
 
-    res.status(201).json(novaConta);
+    res.status(201).json({
+      message: 'Conta criada com sucesso',
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: 'Erro ao criar conta.' });
