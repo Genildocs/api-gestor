@@ -8,8 +8,16 @@ router
   .post(authController.protectedRoute, contaController.createConta)
   .get(authController.protectedRoute, contaController.getContas);
 
-router.get('/acumulado-mensal', contaController.getAcumuladoMensal);
-router.get('/mensais', contaController.getContasMensais);
+router.get(
+  '/acumulado-mensal',
+  authController.protectedRoute,
+  contaController.getAcumuladoMensal
+);
+router.get(
+  '/mensais',
+  authController.protectedRoute,
+  contaController.getContasMensais
+);
 
 router
   .route('/:id')
