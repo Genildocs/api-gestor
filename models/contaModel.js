@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const { DateTime } = require('luxon');
 
 const contaSchema = new mongoose.Schema({
+  id:{Type: String},
   nome: { type: String, required: true },
   descricao: { type: String },
   valor: { type: Number, required: true },
