@@ -163,7 +163,7 @@ exports.updateConta = async (req, res) => {
     });
     const user = await User.findById(req.user);
     await User.findByIdAndUpdate(user._id, {
-      $pull: { contas: conta._id },
+      $(update): { contas: conta._id },
     });
     res.status(200).json({
       message: 'Conta atualizada com sucesso',
