@@ -6,7 +6,7 @@ const connectDB = async () => {
 
     console.log(`MongoDB Connected: ${conn.connection.host}`);
 
-    // mongoose.set('debug', true);
+    mongoose.set('debug', true);
     //Eventos para monitorar o estado da conexão
     mongoose.connection.on('connected', () => {
       console.log(`Mongoose conectado ao banco de dados`);
