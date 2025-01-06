@@ -6,8 +6,11 @@ const authRoutes = require('./routes/authRoutes');
 const contasRoutes = require('./routes/contasRoutes');
 const userRoutes = require('./routes/userRoutes');
 const caixaRoutes = require('./routes/caixaRoutes');
-const app = express();
+const helmet = require('helmet');
 const cors = require('cors');
+const app = express();
+
+app.use(helmet());
 
 //Middleware
 app.use(cors());
