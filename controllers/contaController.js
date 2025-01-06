@@ -77,6 +77,7 @@ exports.getAcumuladoMensal = async (req, res) => {
   try {
     const { startDate, endDate } = req.query; // Datas passadas como query params
     //na requisição: ?startDate=2024-12-01&endDate=2024-12-31 adicionar ao final do endpoint
+    const user = req.user._id;
 
     // Validação de datas
     if (!startDate || !endDate) {
@@ -89,7 +90,9 @@ exports.getAcumuladoMensal = async (req, res) => {
     const acumulado = await Conta.aggregate([
       {
         $match: {
-          createdAt: {
+          user: user,
+          status: 'pendente',
+          criadoEm: {
             $gte: new Date(startDate), // Data inicial
             $lte: new Date(endDate), // Data final
           },
@@ -115,7 +118,7 @@ exports.getContasMensais = async (req, res) => {
   try {
     const { year, month } = req.query; // Ano e mês fornecidos como parâmetros de consulta
     //na requisição: ?year=2024&month=12 adicionar no final do endpoint
-
+    const user = req.user._id;
     // Validação de parâmetros
     if (!year || !month) {
       return res
@@ -129,10 +132,11 @@ exports.getContasMensais = async (req, res) => {
 
     // Busca de contas no intervalo
     const contas = await Conta.find({
-      createdAt: {
+      vencimento: {
         $gte: startDate, // Data inicial
         $lte: endDate, // Data final
       },
+      user: user,
     });
 
     // Resposta com as contas encontradas

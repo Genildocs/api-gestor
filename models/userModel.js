@@ -22,6 +22,15 @@ const userSchema = new mongoose.Schema({
       ref: 'Conta',
     },
   ],
+  transacao: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Caixa',
+    },
+  ],
+  passwordChangedAt: { type: Date },
+  passwordResetToken: { type: String },
+  passwordResetExpires: { type: Date },
 });
 
 // Middleware para hash da senha antes de salvar
