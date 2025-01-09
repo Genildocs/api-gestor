@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema({
       ref: 'Conta',
     },
   ],
-  transacao: [
+  caixas: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Caixa',

@@ -6,18 +6,18 @@ exports.createCaixa = async (req, res) => {
     const body = req.body;
     const user = req.user;
 
-    const transacao = new Caixa({ ...body, user: user._id });
-    const saveTransacao = await transacao.save();
+    const caixa = new Caixa({ ...body, user: user._id });
+    const saveCaixa = await caixa.save();
 
     await User.findByIdAndUpdate(user._id, {
-      $push: { transacao: saveTransacao._id },
+      $push: { caixas: saveCaixa._id },
     });
 
     res.status(201).json({
-      message: 'Transação criada com sucesso',
+      message: 'Caixa criada com sucesso',
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: 'Erro ao criar transação' });
+    res.status(500).json({ message: 'Erro ao criar caixa' });
   }
 };
