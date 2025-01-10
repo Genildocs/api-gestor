@@ -2,16 +2,20 @@ const { promisify } = require('util');
 const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const crypto = require('crypto');
-
-const secretKey = process.env.SECRET_KEY;
+const Joi = require('joi');
 
 // Controlador para obter todos os usuários
+const createUserSchema = Joi.object({
+  email: Joi.string().email().required(),
+  username: Joi.string().required(),
+  password: Joi.string().min(8).required(),
+});
 
 exports.createUser = async (req, res) => {
   try {
-    const uid = crypto.randomUUID();
-    const { username, email, password } = req.body;
+    const { username, email, password } = await createUserSchema.validateAsync(
+      req.body
+    );
     //valida se o email ja é registrado
     const existingEmail = await User.findOne({ email });
 
@@ -19,10 +23,13 @@ exports.createUser = async (req, res) => {
       return res.status(400).json({ message: 'Email já registrado' });
     }
 
-    const newUser = new User({ username, email, password, uid });
+    const newUser = new User({ username, email, password });
     await newUser.save();
     res.status(201).json({ message: 'Usuário criado com sucesso' });
   } catch (error) {
+    if (error.isJoi) {
+      return res.status(400).json({ error: error.message });
+    }
     console.error(error);
     res.status(500).json({ message: `Erro: ${error.message}` });
   }
@@ -41,9 +48,13 @@ exports.loginUser = async (req, res) => {
       return res.status(401).json({ message: 'Email ou senha incorretos' });
     }
     // Gera o token JWT
-    const token = jwt.sign({ userId: user._id, email: user.email }, secretKey, {
-      expiresIn: '12h',
-    });
+    const token = jwt.sign(
+      { userId: user._id, email: user.email },
+      process.env.SECRET_KEY,
+      {
+        expiresIn: '12h',
+      }
+    );
 
     res.status(200).json({
       status: {
@@ -73,7 +84,7 @@ exports.protectedRoute = async (req, res, next) => {
   }
   //verificar se o token é valido
 
-  const decoded = await promisify(jwt.verify)(token, secretKey);
+  const decoded = await promisify(jwt.verify)(token, process.env.SECRET_KEY);
 
   //verificar se o usuário existe
   const currentUser = await User.findById(decoded.userId);
